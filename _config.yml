@@ -99,10 +99,10 @@ service-worker: true
 # Friends
 friends: [
     {
-        title: "博客园",
-        href: "https://www.cnblogs.com/daibeisi/"
+      title: "BookHub",
+      href: "https://www.bookhub.com.cn/"
     },{
-        title: "简书",
-        href: ""
+      title: "博客园",
+      href: "https://www.cnblogs.com/daibeisi/"
     }
 ]
