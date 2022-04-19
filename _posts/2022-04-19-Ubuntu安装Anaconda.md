@@ -2,7 +2,7 @@
 layout:     post
 title:      Ubuntu安装与卸载Anaconda
 date:       2022-4-19
-author:     daibeisi
+author:     呆贝斯
 header-img: img/post-bg-rwd.jpg
 catalog: true
 tags:
