@@ -10,7 +10,8 @@ tags:
     - Anaconda
 ---
 ## 安装
-1.到[Anaconda官网](https://www.anaconda.com/distribution/)找到对应安装包链接使用wget下载。
+1.到 [Anaconda官网](https://www.anaconda.com/distribution/) 或 
+[miniconda](https://docs.conda.io/en/latest/miniconda.html) 找到对应安装包链接使用wget下载。
 
 2.cd到服务器上安装包所在位置，用以下命令安装(不建议使用root账户安装)。
 ```angular2html
