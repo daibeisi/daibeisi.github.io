@@ -4,6 +4,7 @@ title:      Ubuntu安装与卸载Anaconda
 date:       2022-4-19
 author:     呆贝斯
 header-img: img/post-bg-rwd.jpg
+onTop: true
 catalog: true
 tags:
     - Ubuntu
