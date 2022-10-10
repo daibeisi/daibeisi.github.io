@@ -48,15 +48,16 @@ AMQP，即Advanced Message Queuing Protocol（高级消息队列协议），是�
   MQ的加入大大增加了系统的复杂度，以前的系统间同步是远程调用，现在是通过MQ进行异步调用。
 
 ## MQ的选型
-|           |RabbitMQ|ActiveMQ|RocketMQ|Kafka|
-|:----------|:--     |:----- |:-----   |-----|
-| 公司社区   | Rabbit |Apache | 阿里   | Apache|
-| 开发语言   | Erlang |Java   | Java   | Scala&Java|
-| 协议支持   | AMQP、XMPP、SMTP、STOMP | OpenWire、STOMP、REST、XMPP、AMQP | 自定义   | 自定义协议，社区封装了http协议支持|
-| 客户端支持语言   | 官方支持Erlang、Java、Raby等，社区产出多种API，几乎支持所有语言 | Java、C、C++、Python、PHP、Perl、.net等   | Java、C++ | 官方支持Java、社区产出多种API、如PHP、Python等 |
-| 单机吞吐量   | 万级（其次） |万级（最差） | 十万级（最好）| 十万级（次之）|
-| 消息延迟   | 微秒级 | 毫秒级   | 毫秒级   | 毫秒以内|
-| 功能特性   | 并发能力强，性能极其好，社区活跃、管理界面丰富 | 老牌产品，成熟度高，文档较多 | MQ功能比较完备，扩展性佳 | 只支持主要的MQ功能，毕竟是为大数据领域准备的 |
+
+|         | RabbitMQ                                 | ActiveMQ                         | RocketMQ      | Kafka                           |
+|---------|------------------------------------------|----------------------------------|---------------|---------------------------------|
+| 公司社区    | Rabbit                                   | Apache                           | 阿里            | Apache                          |
+| 开发语言    | Erlang                                   | Java                             | Java          | Scala&Java                      |
+| 协议支持    | AMQP、XMPP、SMTP、STOMP                     | OpenWire、STOMP、REST、XMPP、AMQP    | 自定义           | 自定义协议，社区封装了http协议支持             |
+| 客户端支持语言 | 官方支持Erlang、Java、Raby等，社区产出多种API，几乎支持所有语言 | Java、C、C++、Python、PHP、Perl、.net等 | Java、C++      | 官方支持Java、社区产出多种API、如PHP、Python等 |
+| 单机吞吐量   | 万级（其次）                                   | 万级（最差）                           | 十万级（最好）       | 十万级（次之）                         |
+| 消息延迟    | 微秒级                                      | 毫秒级                              | 毫秒级           | 毫秒以内                            |
+| 功能特性    | 并发能力强，性能极其好，社区活跃、管理界面丰富                  | 老牌产品，成熟度高，文档较多                   | MQ功能比较完备，扩展性佳 | 只支持主要的MQ功能，毕竟是为大数据领域准备的         |
 
 ## RabbitMQ简介
 RabbitMQ官方地址：www.rabbitmq.com/ 2007年，Rabbit技术公司基于AMQP标准开发的RabbitMQ 1.0 发布。RabbitMQ采用Erlang语言开发。
