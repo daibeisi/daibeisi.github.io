@@ -34,6 +34,12 @@ $ bash Anaconda3-2021.11-Linux-x86_64.sh
 7.初始化完成后需要打开新的终端才能生效，如果不想默认激活`base`环境，可输入命令`conda config --set auto_activate_base false`关闭 ，最后输入`conda --version`检测是否安装成功。
 ![](/img/Anaconda_install_5.png)
 
+8.win10安装时勾选把conda添加到系统环境变量，安装完成后以管理员身份运行 power shell 并执行以下命令。
+```
+set-ExecutionPolicy RemoteSigned
+conda init powershell
+```
+
 ## 卸载
 1.由于Anaconda的安装文件都包含在一个目录中，所以直接将该目录删除即可。到Anaconda安装目录，删除整个Anaconda目录。
 
