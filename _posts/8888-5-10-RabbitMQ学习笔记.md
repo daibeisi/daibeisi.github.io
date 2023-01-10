@@ -9,6 +9,7 @@ onTop: true
 catalog: true
 tags:
     - RabbitMQ
+    - 消息队列
 ---
 ## MQ的概念
 MQ全称 Message Queue（消息队列），是在消息的传输过程中保存消息的容器，用于分布式系统之间的通讯。
