@@ -8,7 +8,6 @@ header-img: img/post-bg-desk.jpg
 onTop: true
 catalog: true
 tags:
-    - RabbitMQ
     - 消息队列
 ---
 ## MQ的概念

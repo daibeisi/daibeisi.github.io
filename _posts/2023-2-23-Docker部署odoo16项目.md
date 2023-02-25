@@ -1,93 +1,77 @@
 ---
 layout:     post
-title:      Docker Compose 搭建 Django 示例项目
-subtitle:   ......
-date:       2022-5-18
+title:      Docker部署Odoo16项目
+subtitle:   ...
+date:       2023-2-23
 author:     呆贝斯
 header-img: img/post-bg-desk.jpg
-onTop: true
 catalog: true
-tags:
-    - Docker
-    - Django
 ---
 # 准备工作
-1. 创建一个空的项目目录。
+1. 创建一个如下目录文件夹。
+   ```
+   odoo16_addons
+    ├── Dockerfile
+    ├── docker-compose.yml
+    ├── extra-addons             // 个人开发的插件
+    ├── odoo.conf                // odoo项目配置文件
+    ├── requirements.txt         // Python需求包
+    └── README.md                // 项目文档
+   ```
 
-    可以将目录命名为易于记忆的名称。此目录是应用程序映像的上下文。该目录应该只包含构建该图像的资源。
-
-2. 在项目目录中创建一个名为Dockerfile的新文件。
-
-    Dockerfile 通过一个或多个配置该映像的构建命令定义应用程序的映像内容。构建后，您可以在容器中运行映像。
-
-3. 将以下内容添加到Dockerfile。
-
+2. 在项目目录中创建一个Dockerfile文件,将以下内容添加到Dockerfile。
     ```
     # syntax=docker/dockerfile:1
-    FROM python:3
-    ENV PYTHONDONTWRITEBYTECODE=1
-    ENV PYTHONUNBUFFERED=1
-    WORKDIR /code
-    COPY requirements.txt /code/
+    FROM odoo:16.0
+    WORKDIR /mnt
+    COPY ./requirements.txt /mnt/
     RUN pip install -r requirements.txt
-    COPY . /code/
     ```
-    这个Dockerfile从Python3父图像开始。通过添加新code目录来修改父图像。通过安装requirements.txt文件中定义的 Python 要求进一步修改父映像。
+    这个Dockerfile从Python3父图像开始。通过添加新code目录来修改父图像。
+    通过安装requirements.txt文件中定义的 Python 要求进一步修改父映像。
 
-4. 保存并关闭Dockerfile。
-
-5. 在项目目录中创建一个requirements.txt文件。
-
+3. 在项目目录中创建一个requirements.txt文件,并在文件中添加所需的软件。
+    ```
+    pyjwt==2.6.0
+    ```
     此文件被Dockerfile中RUN pip install -r requirements.txt使用.
 
-6. 在文件中添加所需的软件。
-
-    ```
-    Django>=3.0,<4.0
-    psycopg2>=2.8
-    ```
-
-7. 保存并关闭requirements.txt文件。
-
-8. 在项目目录中创建一个名为docker-compose.yml的文件。
+4. 在项目目录中创建一个名为docker-compose.yml的文件。
 
     该docker-compose.yml文件描述了制作您的应用程序的服务。
     在此示例中，这些服务是 Web 服务器和数据库。
     compose 文件还描述了这些服务使用哪些 Docker 映像、它们如何链接在一起、它们可能需要安装在容器内的任何卷。
     最后，该docker-compose.yml文件描述了这些服务公开的端口。
-
-9. 将以下配置添加到文件中。
-
     ```
-    version: "3.9"
-       
+    version: '3'
     services:
-      db:
-        image: postgres
-        volumes:
-          - ./data/db:/var/lib/postgresql/data
-        environment:
-          - POSTGRES_DB=postgres
-          - POSTGRES_USER=postgres
-          - POSTGRES_PASSWORD=postgres
       web:
-        build: .
-        command: python manage.py runserver 0.0.0.0:8000
-        volumes:
-          - .:/code
-        ports:
-          - "8000:8000"
-        environment:
-          - POSTGRES_NAME=postgres
-          - POSTGRES_USER=postgres
-          - POSTGRES_PASSWORD=postgres
+        image: odoo:16.0
+        restart: always
+        container_name: odoo
         depends_on:
           - db
+        ports:
+          - "8069:8069"
+        environment:
+          - TZ=Asia/Shanghai
+        volumes:
+          - ./odoo-web-data:/var/lib/odoo
+          - ./odoo-web-log:/var/log/odoo
+          - ./config:/etc/odoo
+          - ./extra-addons:/mnt/extra-addons
+      db:
+        image: postgres:14
+        restart: always
+        container_name: postgres
+        environment:
+          - TZ=Asia/Shanghai
+          - POSTGRES_DB=odoo
+          - POSTGRES_USER=odoo
+          - POSTGRES_PASSWORD=odoo
+        volumes:
+          - ./odoo-db-data:/var/lib/postgresql/data
     ```
-    该文件定义了两个服务：db服务和web服务。
-    这里使用内置开发服务器在端口`8000`上运行应用程序，不要在生产环境中使用它。
-
-10. 保存并关闭docker-compose.yml文件。
 
 # 创建Django项目
 1. 切换到项目目录的根目录。

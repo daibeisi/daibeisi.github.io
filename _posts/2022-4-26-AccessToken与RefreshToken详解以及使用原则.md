@@ -47,7 +47,8 @@ tags:
 + (B) 授权服务器验证客户端身份无误，且请求的资源是合理的，则颁发Access Token 和 Refresh Token，可以同时返回Access Token的过期时间等附加属性。
 + (C) 带着Access Token请求资源
 + (D) 资源服务器验证Access Token有效则返回请求的内容。
-+ (E) 注意： 上面的(C)(D)步骤可以反复进行，直到Access Token过期。 如果客户端在请求之前就能判断Access Token已过期或临近过期（下发过期时间），就可以直接跳到步骤(G)。否则，就会再请求一次，也就产生了本步骤。
++ (E) **注意： 上面的(C)(D)步骤可以反复进行，直到Access Token过期。 如果客户端在请求之前就能判断Access Token已过期或临近过期（下发过期时间），
+就可以直接跳到步骤(G)。否则，就会再请求一次，也就产生了本步骤。**
 + (F) 当Access Token无效的时候，资源服务器会拒绝响应资源并返回Token无效的错误。
 + (G) 客户端重新向授权服务器请求Access Token，但是这次只需带着Refresh Token即可，而不需要用户再执行认证和授权的流程。这样就可以做到用户无感。
 + (H) 授权服务器验证Refresh Token，如果有效，则签发新的Access Token（或者同时下发一个新的Refresh Token）。
