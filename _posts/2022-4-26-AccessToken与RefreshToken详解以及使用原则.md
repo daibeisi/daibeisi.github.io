@@ -41,7 +41,6 @@ tags:
 值得注意的是，资源服务器不签发Token，但是可以具备独立验证Access Token的能力。
 
 上面的流程图包括了下面的步骤。
-
 + (A) 客户端向授权服务器请求Access Token（整个认证授权的流程，可以是多次请求完成该步骤）
 + (B) 授权服务器验证客户端身份无误，且请求的资源是合理的，则颁发Access Token 和 Refresh Token，可以同时返回Access Token的过期时间等附加属性。
 + (C) 带着Access Token请求资源
@@ -71,6 +70,5 @@ Refresh Token的有效期就是允许用户在多久时间内不用重新登录�
 所有token应该保管在private的地方，也就是只能客户端自己使用，所有token都应该在TLS信道下发送（比如HTTPS）。
 # 参考
 [西门老铁](https://juejin.cn/post/6859572307505971213)
-
 [The OAuth 2.0 Authorization Framework](http://www.rfcreader.com/#rfc6749_line2308)
 
