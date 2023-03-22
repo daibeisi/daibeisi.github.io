@@ -1,0 +1,396 @@
+---
+layout:     post
+title:      QWeb学习笔记
+subtitle:   ......
+date:       2023-3-22
+author:     呆贝斯
+header-img: img/post-bg-desk.jpg
+catalog: true
+tags:
+    - 随笔
+---
+# 介绍
+QWeb 是 Odoo 2使用的主要模板引擎。它是一个 XML 模板引擎，主要用于生成HTML 片段和页面。
+模板指令被指定为以 为前缀的 XML 属性t-，例如t-ifConditionals ，元素和其他属性直接呈现。
+
+# 数据输出
+QWeb 的输出指令out将自动对其输入进行 HTML 转义，从而在显示用户提供的内容时限制XSS风险。
+out接受一个表达式，对其求值并将结果注入文档：
+```
+<p><t t-out="value"/></p>
+```
+value使用设置的值呈现42：
+```
+<p>42</p>
+```
+
+# 条件式
+QWeb 有一个条件指令if，它评估作为属性值给出的表达式：
+```
+<div>
+    <t t-if="condition">
+        <p>ok</p>
+    </t>
+</div>
+```
+如果条件为真，则呈现元素：
+```
+<div>
+    <p>ok</p>
+</div>
+```
+但如果条件为假，它会从结果中移除：
+```
+<div>
+</div>
+```
+条件渲染适用于指令的承载者，它不一定是<t>：
+```
+<div>
+    <p t-if="condition">ok</p>
+</div>
+```
+将给出与前面示例相同的结果。
+额外的条件分支指令t-elif也t-else可用：
+```
+<div>
+    <p t-if="user.birthday == today()">Happy birthday!</p>
+    <p t-elif="user.login == 'root'">Welcome master!</p>
+    <p t-else="">Welcome!</p>
+</div>
+```
+
+# 循环
+QWeb 有一个迭代指令foreach，它采用一个表达式返回要迭代的集合，第二个参数t-as提供用于迭代“当前项”的名称：
+```
+<t t-foreach="[1, 2, 3]" t-as="i">
+    <p><t t-out="i"/></p>
+</t>
+```
+将呈现为：
+```
+<p>1</p>
+<p>2</p>
+<p>3</p>
+```
+与条件一样，foreach适用于带有指令属性的元素，并且
+```
+<p t-foreach="[1, 2, 3]" t-as="i">
+    <t t-out="i"/>
+</p>
+```
+等同于前面的例子。
+foreach可以迭代数组（当前项将是当前值）或映射（当前项将是当前键）。
+迭代一个整数（相当于迭代一个介于 0 和提供的整数之间的数组）仍然受支持但已弃用。
+除了通过 传递的名称外t-as，foreach还为各种数据点提供了一些其他变量：
++ $as_all（弃用）：被迭代的对象
++ $as_value：当前迭代值，与$as列表和整数相同，但对于映射，它提供值（其中$as提供键）
++ $as_index：当前迭代索引（迭代的第一项索引为 0）
++ $as_size：集合的大小（如果可用）
++ $as_first：当前项目是否是迭代的第一个（等价于 ）$as_index == 0
++ $as_last：当前项是否是迭代的最后一项（等同于 ），需要迭代对象的大小可用$as_index + 1 == $as_size
++ $as_parity（弃用）：或者"even","odd"当前迭代轮次的奇偶性
++ $as_even（弃用）：一个布尔标志，指示当前迭代轮次在偶数索引上
++ $as_odd（弃用）：一个布尔标志，指示当前迭代轮次在奇数索引上
+提供的这些额外变量和创建到 中的所有新变量 foreach仅在 的范围内可用foreach。如果变量存在于 的上下文之外foreach，
+则该值将在 foreach 的末尾复制到全局上下文中。
+```
+<t t-set="existing_variable" t-value="False"/>
+<!-- existing_variable now False -->
+
+<p t-foreach="[1, 2, 3]" t-as="i">
+    <t t-set="existing_variable" t-value="True"/>
+    <t t-set="new_variable" t-value="True"/>
+    <!-- existing_variable and new_variable now True -->
+</p>
+
+<!-- existing_variable always True -->
+<!-- new_variable undefined -->
+```
+
+# 属性
+QWeb 可以即时计算属性并将计算结果设置在输出节点上。这是通过t-att以 3 种不同形式存在的 (attribute) 指令完成的：
+1. 创建一个名为的属性$name，评估属性值并将结果设置为属性值：
+    ```
+    <div t-att-a="42"/>
+    ```
+    将呈现为：
+    ```
+    <div a="42"></div>
+    ```
+2. 与前面相同，但参数是格式字符串 而不是表达式，通常用于混合文字和非文字字符串（例如类）：
+    ```
+    <t t-foreach="[1, 2, 3]" t-as="item">
+        <li t-attf-class="row {{ (item_index % 2 === 0) ? 'even' : 'odd' }}">
+            <t t-out="item"/>
+        </li>
+    </t>
+    ```
+    将呈现为：
+    ```
+    <li class="row even">1</li>
+    <li class="row odd">2</li>
+    <li class="row even">3</li>
+    ```
+3. 如果参数是映射，则每个 (key, value) 对生成一个新属性及其值：
+    ```
+    <div t-att="{'a': 1, 'b': 2}"/>
+    ```
+    将呈现为：
+    ```
+    <div a="1" b="2"></div>
+    ```
+   如果参数是一对（元组或 2 元素数组），则该对的第一项是属性的名称，第二项是值：
+    ```
+    <div t-att="['a', 'b']"/>
+    ```
+    将呈现为：
+    ```
+    <div a="b"></div>
+    ```
+
+# 设置变量
+QWeb 允许从模板中创建变量，记忆一个计算（多次使用它），给一段数据一个更清晰的名字，......
+
+这是通过set指令完成的，该指令采用要创建的变量的名称。可以通过两种方式提供要设置的值：
++ 一个t-value包含表达式的属性，其评估结果将被设置：
+    ```
+    <t t-set="foo" t-value="2 + 1"/>
+    <t t-out="foo"/>
+    ```
+  将打印3
++ 如果没有t-value属性，则渲染节点的主体并将其设置为变量的值：
+    ```
+    <t t-set="foo">
+        <li>ok</li>
+    </t>
+    <t t-out="foo"/>
+    ```
+
+# 调用子模板
+QWeb 模板可用于顶层渲染，但它们也可以在另一个模板中使用（以避免重复或为模板的部分命名）使用指令t-call：
+```
+<t t-call="other-template"/>
+```
+如果定义 other_template为：
+```
+<p><t t-value="var"/></p>
+```
+上面的调用将呈现为<p/>（无内容），但是：
+```
+<t t-set="var" t-value="1"/>
+<t t-call="other-template"/>
+```
+将呈现为<p>1</p>。
+但是，这存在从外部可见的问题t-call。或者，指令主体中设置的内容将在调用子模板之前call进行评估，并且可以更改本地上下文：
+```
+<t t-call="other-template">
+    <t t-set="var" t-value="1"/>
+</t>
+<!-- "var" does not exist here -->
+```
+指令的主体call可以是任意复杂的（不仅仅是 set指令），它的呈现形式将在被调用模板中作为一个神奇的变量可用0：
+```
+<div>
+    This template was called with content:
+    <t t-out="0"/>
+</div>
+```
+被这样称呼：
+```
+<t t-call="other-template">
+    <em>content</em>
+</t>
+```
+将导致：
+```
+<div>
+    This template was called with content:
+    <em>content</em>
+</div>
+```
+
+# 高级输出
+默认情况下，out应该对需要转义的内容进行HTML转义，以保护系统免受XSS的影响。
+不需要转义的内容会被原封不动地注入到文档中，并可能成为文档实际标记的一部分。
+唯一跨平台的 "安全 "内容是t-call或t-set与 "body"（相对于t-value或t-valuef）的输出。
+
+# 弃用指令
+## esc
+别名out，最初会对其输入进行 HTML 转义。尚未正式弃用，因为out和之间的唯一区别esc是后者有点不清楚/不正确。
+## raw
+一个永远不会out逃脱其内容的版本。内容按原样发出，无论它是否安全。 15.0 版后已移除：改为使用out值markupsafe.Markup。 
+t-raw已被弃用，因为随着生成内容的代码的发展，很难跟踪它将用于标记，从而导致更复杂的审查和更危险的失误。
+
+# Python专属指令
+## 独家指令
++ t-field指令只能在对 "智能 "记录（浏览方法的结果）进行字段访问（a.b）时使用。
+它能够根据字段类型自动格式化，并被整合到网站的富文本编辑中。
++ t-options可以用来定制字段，最常见的选项是widget，其他选项则取决于字段或widget。
+## 调试
+使用 PDB 的 API 调用调试器set_trace。该参数应该是一个模块的名称，在该模块上set_trace调用了一个方法：
+```
+<t t-debug="pdb"/>
+```
+相当于importlib.import_module("pdb").set_trace()
+## 渲染缓存
++ t-cache="key_cache"标记要在渲染时缓存的模板部分。每个子指令只会在第一次渲染时被调用。
+这意味着在呈现这些子指令期间执行的 sql 查询也只执行一次。
++ t-nocache="documentation"每次标记要渲染的模板部分。内容只能使用根值。
+### 为什么以及何时使用t-cache？？
+该指令用于通过缓存最终文档的部分来加速渲染，这可能会保存对数据库的查询。
+然而，它应该谨慎使用，因为它t-cache不可避免地会使模板复杂化（以及它们t-set对 example 的理解）。
+
+但是，为了实际保存数据库查询，可能需要使用延迟计算的值来呈现模板。如果这些惰性值用于缓存部分，
+则如果该部分在缓存中可用，则不会评估它们。
+
+该t-cache指令对于使用依赖于有限数据量的值的模板部分很有用。我们建议使用分析器分析模板的呈现（通过激活“添加 qweb 指令上下文”选项）。
+将惰性值传递给控制器中的渲染允许您使用这些值显示指令并触发查询。
+
+使用这种缓存的一个问题是让不同的用户可以使用它（不同的用户应该以相同的方式呈现缓存的部分）。
+另一个潜在的问题是在必要时使其条目无效。对于后者，应该明智地选择关键表达式。例如，使用write_date记录集可以使缓存键过时，
+而不必从缓存中显式丢弃它。
+
+还应该注意t-cacheparts 中的值是有范围的这一事实。t-set这意味着如果模板的这一部分有指令，
+那么它之后的渲染可能与没有t-cache指令时不同。
+
+### 如果 t-cache 里面有一个 t-cache 怎么办？
+零件被缓存。每个仅包含与其呈现对应的字符串。因此，t-cache内部的读取频率可能会降低，它的缓存键不一定会被使用。
+如果一定是这种情况，那么您可能需要添加一个t-nocache（在同一节点或父节点上）。
+
+### t-nocache 有什么用？
+如果要缓存模板的一部分，t-cache但一小部分必须保持动态并在缓存时进行评估。但是，中的部分 t-nocache将无法访问t-set模板的值。
+那里只能访问控制器提供的值。例如，菜单被缓存是因为它一直都是相同的并且需要时间来呈现
+（使用带有 qweb 上下文的性能开发工具可以让您进行调查）。但是，在菜单中，我们希望电子商务购物车始终保持最新状态。
+所以有一个t-nocache让这部分保持动态。
+
+### t-cache的基础
+t-cache指令允许你存储一个模板的渲染结果。关键表达式（例如42：t-cache="42"）将被评估为一个python表达式。
+这将被用来生成缓存的密钥。所以对于同一个模板部分可以有不同的缓存值（缓存的渲染部分）。
+如果密钥表达式是一个元组或一个列表，在生成缓存密钥时将会被搜索。如果一个或多个记录集由关键表达式返回，
+那么模型、id和它们对应的write_date将被用来生成缓存密钥。特殊情况。如果键表达式返回一个Falsy值，那么该内容将不会被缓存。
+```
+<div t-cache="record,bool(condition)">
+    <span t-if="condition" t-field="record.partner_id.name">
+    <span t-else="" t-field="record.partner_id" t-options-widget="contact">
+</div>
+```
+在这种情况下，缓存中可能有值（字符串）对应于已经返回的每条记录，条件为真，以及条件为假。如果一个模块修改了记录，
+write_date 被修改，缓存的值将被丢弃。
+
+### t-cache和范围值（t-set, t-foreach...）
+t-cache中的值是有范围的，这涉及到在某个父节点上有或没有t-cache的行为变化。不要忘记考虑到Odoo使用了大量的模板、t-call和视图继承。
+因此，添加一个t-cache可以修改你在编辑时没有看到的模板的渲染。(t-foreach它就像每个迭代的t-set)
+```
+<div>
+    <t t-set="a" t-value="1"/>
+    <inside>
+        <t t-set="a" t-value="2"/>
+        <t t-out="a"/>
+    </inside>
+    <outside t-out="a"/>
+
+    <t t-set="b" t-value="1"/>
+    <inside t-cache="True">
+        <t t-set="b" t-value="2"/>
+        <t t-out="b"/>
+    </inside>
+    <outside t-out="b"/>
+</div>
+```
+将呈现:
+```
+<div>
+    <inside>2</inside>
+    <outside>2</inside>
+
+    <inside>2</inside>
+    <outside>1</inside>
+</div>
+```
+### t-nocache的基础
+带有t-nocache属性的节点中包含的模板部分不被缓存。因此，这个内容是动态的，并被系统地渲染。
+然而，可用的值是由控制器提供的（当调用_render方法时）。
+```
+<section>
+    <article t-cache="record">
+        <title><t t-out="record.name"/> <i t-nocache="">(views: <t t-out="counter"/>)</i></titlle>
+        <content t-out="record.description"/>
+    </article>
+</section>
+```
+将呈现（计数器 = 1）：
+```
+<section>
+    <article>
+        <title>The record name <i>(views: 1)</i></titlle>
+        <content>Record description</content>
+    </article>
+</section>
+```
+这里<i>包含容器的标签将始终被渲染。而其余的则作为缓存中的单个字符串。
+
+### t-nocache和范围根值（t-set，t-foreach...）
+t-nocache标签的内容可以用来做文档，解释为什么要添加这个指令。值的范围是t-nocache，
+这些值只能是根值（由控制器和/或调用ir.qweb的_render方法时提供的值）。t-set可以在模板部分进行，但不会在其他地方使用。
+```
+<section>
+    <t t-set="counter" t-value="counter * 10"/>
+    <header t-nocache="">
+        <t t-set="counter" t-value="counter + 5"/>
+        (views: <t t-out="counter"/>)
+    </header>
+    <article t-cache="record">
+        <title><t t-out="record.name"/> <i t-nocache="">(views: <t t-out="counter"/>)</i></titlle>
+        <content t-out="record.description"/>
+    </article>
+    <footer>(views: <t t-out="counter"/>)</footer>
+</section>
+```
+将呈现（计数器 = 1）：
+```
+<section>
+    <header>
+        (views: 6)
+    </header>
+    <article>
+        <title>The record name <i>(views: 1)</i></titlle>
+        <content>Record description</content>
+    </article>
+    <footer>(views: 10)</footer>
+</section>
+```
+这里<i>包含容器的标签将始终被渲染。而其余的则作为缓存中的单个字符串。t-set计数器没有更新 t-nocache
+
+### t-nocache-*在缓存中添加一些原始值
+为了能够使用模板中生成的值，可以缓存它们。该指令用作t-nocache-*="expr"所选*值的名称和exprpython 表达式，
+因此结果将被缓存。缓存的值必须是原始类型。
+```
+<section t-cache="records">
+    <article t-foreach="records" t-as="record">
+        <header>
+            <title t-field="record.get_method_title()"/>
+        </header>
+        <footer t-nocache="This part has a dynamic counter and must be rendered all the time."
+                t-nocache-cached_value="record.get_base_counter()">
+            <span t-out="counter + cached_value"/>
+        </footer>
+    </article>
+</section>
+```
+该值cached_value与缓存的模板部分一起缓存 t-cache="records"，每次都添加到作用域根值中。
+
+## 帮助
++ 基于请求
+QWeb 的大多数 Python 端使用是在控制器中（以及在 HTTP 请求期间），在这种情况下，存储在数据库中的模板（如 视图）
+可以通过调用简单地呈现 odoo.http.HttpRequest.render()：
+```
+response = http.request.render('my-template', {
+    'context_value': 42
+})
+```
+这会自动创建一个Response可以从控制器返回的对象（或进一步定制以适应）。
+
++ 基于试图
+比前面的帮助器更深层次的是ir.qweb上的_render方法（使用数据化）和公共模块方法render（不要使用数据库）。
++ 
