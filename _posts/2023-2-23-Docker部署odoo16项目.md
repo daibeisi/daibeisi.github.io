@@ -11,10 +11,11 @@ catalog: true
 1. 创建一个如下目录文件夹。
    ```
    odoo16_addons
+    ├── bin
+    ├── local-addons             // 个人开发的插件
     ├── Dockerfile
     ├── docker-compose.yml
-    ├── extra-addons             // 个人开发的插件
-    ├── odoo.conf                // odoo项目配置文件
+    ├── odoo.cfg                 // odoo项目配置文件
     ├── requirements.txt         // Python需求包
     └── README.md                // 项目文档
    ```
@@ -73,11 +74,10 @@ catalog: true
           - ./odoo-db-data:/var/lib/postgresql/data
     ```
 
-# 创建Django项目
+# 运行Odoo项目
 1. 切换到项目目录的根目录。
 
 2. 通过运行docker-compose run命令创建 Django 项目，如下所示。
-
     ```
     $ sudo docker-compose run web django-admin startproject composeexample .
     ```

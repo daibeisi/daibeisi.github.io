@@ -45,3 +45,4 @@ tags:
 # 卸载
 在 设置/应用与功能 中, 选择 Go Programming Language, 单击 卸载，
 然后按照提示进行操作。
+![](/img/go-uninstall.png)
