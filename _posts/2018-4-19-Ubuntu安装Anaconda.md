@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Ubuntu安装与卸载Anaconda
-date:       2022-4-19
+date:       2018-4-19
 author:     呆贝斯
 header-img: img/post-bg-rwd.jpg
 catalog: true
@@ -15,7 +15,7 @@ tags:
 
 2.cd到服务器上安装包所在位置，用以下命令安装(不建议使用root账户安装)。
 ```
-$ bash Anaconda3-2021.11-Linux-x86_64.sh
+$ bash Anaconda3-*-Linux-x86_64.sh
 ```
 
 3.点击`Enter`，直到出现。
