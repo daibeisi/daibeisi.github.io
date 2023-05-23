@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      select、poll和epoll学习笔记
+title:      IO 多路复用 – SELECT VS POLL VS EPOLL
 date:       2023-4-13
 author:     呆贝斯
 header-img: img/post-bg-rwd.jpg

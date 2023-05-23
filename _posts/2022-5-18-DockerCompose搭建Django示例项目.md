@@ -66,9 +66,9 @@ tags:
         volumes:
           - ./data/db:/var/lib/postgresql/data
         environment:
-          - POSTGRES_DB=postgres
-          - POSTGRES_USER=postgres
-          - POSTGRES_PASSWORD=postgres
+          - POSTGRES_DB=django
+          - POSTGRES_USER=django
+          - POSTGRES_PASSWORD=django
       web:
         build: .
         command: python manage.py runserver 0.0.0.0:8000
@@ -77,9 +77,9 @@ tags:
         ports:
           - "8000:8000"
         environment:
-          - POSTGRES_NAME=postgres
-          - POSTGRES_USER=postgres
-          - POSTGRES_PASSWORD=postgres
+          - POSTGRES_NAME=django
+          - POSTGRES_USER=django
+          - POSTGRES_PASSWORD=django
         depends_on:
           - db
     ```
