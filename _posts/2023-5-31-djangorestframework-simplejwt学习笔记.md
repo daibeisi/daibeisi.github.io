@@ -163,7 +163,7 @@ def get_tokens_for_user(user):
 一般来说，任何 rest_framework_simplejwt.tokens.Token 子类的令牌都可以通过这种方式创建。
 
 # 令牌类型
-simplejwt提供了两种不同的令牌类型用于认证。令牌的类型通过令牌载荷SIMPLE_JWT
+simplejwt提供了两种不同的令牌类型用于认证。令牌的类型通过令牌载荷中
 
 
 # 滑动令牌
@@ -171,3 +171,8 @@ simplejwt提供了两种不同的令牌类型用于认证。令牌的类型通�
 # 黑名单应用
 
 # 无状态用户认证
+JwtStatelessUserAuthentication后端认证方法并不执行数据库查询来获得一个数据库实例，相反，它返回一个
+rest_framework_simplejwt.models.TokenUser实例，作为一个无状态用户对象，只由一个经过验证的令牌支持，而不是数据库中的记录。
+他可以开发单独托管的Django应用程序之间的单点登录功能，这些应用程序都共享相同的令牌密钥。
+
+要使用这个功能，需要在DjangoREST框架中的DEFAULT_AUTHENTICATION_CLASSES配置设置中添加rest_framework_simplejwt.authentication
