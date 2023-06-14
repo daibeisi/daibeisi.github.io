@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      Docker部署Odoo16项目
+title:      Docker部署Odoo项目
 subtitle:   ...
 date:       2023-2-23
 author:     呆贝斯
@@ -23,7 +23,7 @@ catalog: true
 2. 在项目目录中创建一个Dockerfile文件,将以下内容添加到Dockerfile。
     ```
     # syntax=docker/dockerfile:1
-    FROM odoo:16.0
+    FROM odoo:15.0
     WORKDIR /mnt
     COPY ./requirements.txt /mnt/
     RUN pip install -r requirements.txt
@@ -47,7 +47,7 @@ catalog: true
     version: '3'
     services:
       web:
-        image: odoo:16.0
+        image: odoo:15.0
         restart: always
         container_name: odoo
         depends_on:
