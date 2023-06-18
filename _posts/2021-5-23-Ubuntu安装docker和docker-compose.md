@@ -97,6 +97,8 @@ Docker 提供日志记录驱动程序，用于收集和查看主机上运行的�
 为避免日志数据过度使用磁盘的问题，请考虑以下选项之一：
 1. 配置json-file日志驱动，开启日志轮换。
    ```
+   $ sudo mkdir -p /etc/docker
+   $ sudo tee /etc/docker/daemon.json <<-'EOF'
    {
      "log-driver": "json-file",
      "log-level": "",
@@ -105,6 +107,9 @@ Docker 提供日志记录驱动程序，用于收集和查看主机上运行的�
        "max-size": "10m"
      }
    }
+   EOF
+   $ sudo systemctl daemon-reload
+   $ sudo systemctl restart docker
    ```
 2. 使用一个替代的日志驱动，例如默认执行日志轮换的 "本地 "日志驱动。
 3. 使用一个将日志发送到远程日志聚合器的日志驱动。
