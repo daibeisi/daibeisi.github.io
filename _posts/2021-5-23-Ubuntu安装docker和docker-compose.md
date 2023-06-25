@@ -9,61 +9,131 @@ header-img: img/post-bg-rwd.jpg
 1. 卸载旧版本
     Docker的旧版本被称为docker，docker.io或docker-engine。如果安装了这些，请卸载它们：
     ```
-    sudo apt-get remove docker docker-engine docker.io containerd runc
+    $ for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get remove $pkg; done
     ```
+    apt-get可能会报告您没有安装这些软件包。当您卸载 Docker 时，存储在其中的图像、容器、卷和
+    网络/var/lib/docker/不会自动删除。如果您想从全新安装开始，并且更愿意清理任何现有数据，
+    请阅读 卸载 Docker 引擎部分。
 2. 更新apt包索引并安装包以允许apt通过 HTTPS 使用存储库
     ```
-    sudo apt-get update
-    sudo apt-get install ca-certificates curl gnupg lsb-release
+    $ sudo apt-get update
+    $ sudo apt-get install ca-certificates curl gnupg
     ```
 3. 添加Docker官方的GPG密钥
     ```
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    $ sudo install -m 0755 -d /etc/apt/keyrings
+    $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    $ sudo chmod a+r /etc/apt/keyrings/docker.gpg
     ```
 4. 使用以下命令设置稳定存储库。
     ```
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    $ echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     ```
 5. 更新apt包索引，安装最新版本的Docker Engine和containerd
     ```
-    sudo apt-get update
-    sudo apt-get install docker-ce docker-ce-cli containerd.io
+    $ sudo apt-get update
+    $ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     ```
     要安装特定版本的 Docker Engine，列出您的存储库中可用的版本，然后选择一个并安装。
     ```
-    apt-cache madison docker-ce
-    sudo apt-get install docker-ce=<VERSION_STRING> docker-ce-cli=<VERSION_STRING> containerd.io
+    $ apt-cache madison docker-ce | awk '{ print $3 }'
+    $ VERSION_STRING=5:24.0.0-1~ubuntu.22.04~jammy
+    $ sudo apt-get install docker-ce=$VERSION_STRING docker-ce-cli=$VERSION_STRING containerd.io docker-buildx-plugin docker-compose-plugin
     ```
 
 6. 通过运行hello-world 映像验证 Docker Engine 是否已正确安装
     ```
     sudo docker run hello-world
     ```
-7. Docker Compose 依赖 Docker Engine 进行任何有意义的工作，因此请确保根据您的设置，在本地或远程安装了 Docker Engine。
-   运行此命令以下载 Docker Compose 的当前稳定版本。
+7. 测试docker-compose安装是否成功。
     ```
-    sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    docker compose --version
     ```
-8. 对二进制文件应用可执行权限。
-    ```
-    sudo chmod +x /usr/local/bin/docker-compose
-    ```
-9. 测试docker-compose安装是否成功。
-    ```
-    docker-compose --version
-    ```
+
+# 以非 root 用户身份管理 Docker
+Docker 守护进程绑定到 Unix 套接字，而不是 TCP 端口。默认情况下，它是 root拥有 Unix 套接字的用户，
+其他用户只能使用 sudo. Docker 守护进程始终以root用户身份运行。
+
+如果您不想在docker命令前加上sudo，请创建一个名为 docker 的 Unix 组并将用户添加到其中。
+当 Docker 守护进程启动时，它会创建一个可供组成员访问的 docker Unix 套接字。
+在某些 Linux 发行版上，系统会在使用包管理器安装 Docker Engine 时自动创建此组。在这种情况下，您无需手动创建组。
+
+1. 创建docker组。
+   ```
+   $ sudo groupadd docker
+   ```
+2. 将您的用户添加到docker组中。
+   ```
+   $ sudo usermod -aG docker $USER
+   ```
+3. 注销并重新登录，以便重新评估您的组成员身份。
+   如果您在虚拟机中运行 Linux，可能需要重新启动虚拟机才能使更改生效。您还可以运行以下命令来激活对组的更改。
+   ```
+   $ newgrp docker
+   ```
+4. 验证您是否可以在没有 sudo 下运行 docker.
+   ```
+   $ docker run hello-world
+   ```
+
+# 用systemd配置Docker在开机时启动
+许多现代Linux发行版使用systemd来管理系统启动时的服务。在Debian和Ubuntu上，Docker服务默认在启动时启动。
+在其他使用systemd的Linux发行版上，要在开机时自动启动Docker和containerd，请运行以下命令：
+```
+$ sudo systemctl enable docker.service
+$ sudo systemctl enable containerd.service
+```
+要停止这种行为，请使用disable代替。
+```
+$ sudo systemctl disable docker.service
+$ sudo systemctl disable containerd.service
+```
+
+# 配置默认日志记录驱动程序
+Docker 提供日志记录驱动程序，用于收集和查看主机上运行的所有容器的日志数据。
+默认日志记录驱动程序json-file将日志数据写入主机文件系统上的 JSON 格式文件。
+随着时间的推移，这些日志文件的大小会不断扩大，从而可能导致磁盘资源耗尽。
+
+为避免日志数据过度使用磁盘的问题，请考虑以下选项之一：
+1. 配置json-file日志驱动，开启日志轮换。
+   ```
+   $ sudo mkdir -p /etc/docker
+   $ sudo tee /etc/docker/daemon.json <<-'EOF'
+   {
+     "log-driver": "json-file",
+     "log-level": "",
+     "log-opts": {
+       "max-file": "5",
+       "max-size": "10m"
+     }
+   }
+   EOF
+   $ sudo systemctl daemon-reload
+   $ sudo systemctl restart docker
+   ```
+2. 使用一个替代的日志驱动，例如默认执行日志轮换的 "本地 "日志驱动。
+3. 使用一个将日志发送到远程日志聚合器的日志驱动。
+
+# 配置镜像加速器
+可以通过修改daemon配置文件/etc/docker/daemon.json来使用加速器
+```
+$ sudo mkdir -p /etc/docker
+$ sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://*.mirror.aliyuncs.com"]
+}
+EOF
+$ sudo systemctl daemon-reload
+$ sudo systemctl restart docker
+```
 
 # 卸载
 1. 卸载 Docker Engine、CLI 和 Containerd 包。
     ```
-    sudo apt-get purge docker-ce docker-ce-cli containerd.io
+    $ sudo apt-get purge docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
     ```
 2. 主机上的映像、容器、卷或自定义配置文件不会自动删除。删除所有镜像、容器和卷。
     ```
-    sudo rm -rf /var/lib/docker
-    sudo rm -rf /var/lib/containerd
-    ```
-3. 卸载 Docker Compose
-    ```
-    sudo rm /usr/local/bin/docker-compose
+    $ sudo rm -rf /var/lib/docker
+    $ sudo rm -rf /var/lib/containerd
     ```
