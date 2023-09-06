@@ -41,13 +41,16 @@ header-img: img/post-bg-rwd.jpg
     $ sudo apt-get install docker-ce=$VERSION_STRING docker-ce-cli=$VERSION_STRING containerd.io docker-buildx-plugin docker-compose-plugin
     ```
 
-6. 通过运行hello-world 映像验证 Docker Engine 是否已正确安装
+6. 修改/etc/bash.bashrc
+   添加`alias docker-compose='docker compose'`到文件中后执行命令`source /etc/bash.bashrc`
+
+7. 通过运行hello-world 映像验证 Docker Engine 是否已正确安装
     ```
     sudo docker run hello-world
     ```
-7. 测试docker-compose安装是否成功。
+8. 测试docker-compose安装是否成功。
     ```
-    docker compose --version
+    docker-compose --version
     ```
 
 # 以非 root 用户身份管理 Docker
@@ -75,19 +78,6 @@ Docker 守护进程绑定到 Unix 套接字，而不是 TCP 端口。默认情�
    ```
    $ docker run hello-world
    ```
-
-# 用systemd配置Docker在开机时启动
-许多现代Linux发行版使用systemd来管理系统启动时的服务。在Debian和Ubuntu上，Docker服务默认在启动时启动。
-在其他使用systemd的Linux发行版上，要在开机时自动启动Docker和containerd，请运行以下命令：
-```
-$ sudo systemctl enable docker.service
-$ sudo systemctl enable containerd.service
-```
-要停止这种行为，请使用disable代替。
-```
-$ sudo systemctl disable docker.service
-$ sudo systemctl disable containerd.service
-```
 
 # 配置默认日志记录驱动程序
 Docker 提供日志记录驱动程序，用于收集和查看主机上运行的所有容器的日志数据。
@@ -125,6 +115,19 @@ $ sudo tee /etc/docker/daemon.json <<-'EOF'
 EOF
 $ sudo systemctl daemon-reload
 $ sudo systemctl restart docker
+```
+
+# 用systemd配置Docker在开机时启动
+许多现代Linux发行版使用systemd来管理系统启动时的服务。在Debian和Ubuntu上，Docker服务默认在启动时启动。
+在其他使用systemd的Linux发行版上，要在开机时自动启动Docker和containerd，请运行以下命令：
+```
+$ sudo systemctl enable docker.service
+$ sudo systemctl enable containerd.service
+```
+要停止这种行为，请使用disable代替。
+```
+$ sudo systemctl disable docker.service
+$ sudo systemctl disable containerd.service
 ```
 
 # 卸载
