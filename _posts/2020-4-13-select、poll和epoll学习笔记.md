@@ -4,11 +4,6 @@ title:      IO 多路复用 – SELECT VS POLL VS EPOLL
 date:       2023-4-13
 author:     呆贝斯
 header-img: img/post-bg-rwd.jpg
-catalog: true
-tags:
-    - select
-    - poll
-    - epoll
 ---
 # select
 select最早于1983年出现在4.2BSD中，它`通过一个select()系统调用来监视多个文件描述符的数组`，当select()返回后，

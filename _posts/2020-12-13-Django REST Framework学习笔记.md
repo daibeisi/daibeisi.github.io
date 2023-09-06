@@ -7,7 +7,7 @@ author:     呆贝斯
 header-img: img/post-bg-desk.jpg
 catalog: true
 tags:
-    - Django REST Framework
+    - Django
 ---
 # 介绍
 DRF是一个强大灵活的Django工具包，用于在Web后台构建Restful接口。
