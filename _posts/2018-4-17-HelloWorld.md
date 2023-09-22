@@ -4,7 +4,7 @@ title:      Hello World
 subtitle:   我的第一篇博客
 date:       2018-4-17
 author:     呆贝斯
-header-img: img/hello_world.jpg
+header-img: img/hello_world.png
 catalog: true
 tags:
     - 随笔

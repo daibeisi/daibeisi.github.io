@@ -3,7 +3,7 @@ layout:     post
 title:      Ubuntu安装与卸载Anaconda
 date:       2018-4-19
 author:     呆贝斯
-header-img: img/anaconda.jpg
+header-img: img/anaconda.png
 ---
 # 安装
 1.到 [Anaconda官网](https://www.anaconda.com/distribution/) 或 
