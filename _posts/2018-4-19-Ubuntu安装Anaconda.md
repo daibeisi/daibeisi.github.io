@@ -5,7 +5,6 @@ date:       2018-4-19
 author:     呆贝斯
 header-img: img/anaconda.png
 ---
-
 ## 安装
 
 1.到 [Anaconda官网](https://www.anaconda.com/distribution/) 或 [miniconda](https://docs.conda.io/en/latest/miniconda.html) 找到对应安装包链接使用wget下载。
