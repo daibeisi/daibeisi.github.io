@@ -19,7 +19,7 @@ tags:
     2. 输入`cd postgresql`命令，进入postgresql文件夹。
     3. 输入`vim docker-compose.yml`命令，并将以下内容写入，创建docker-compose.yml文件。
 
-        ```yml
+        ```yaml
         version: '3.1'
         services:
           postgres:
@@ -59,14 +59,14 @@ tags:
 
 3. 修改创建的postgresql文件夹下data文件中pg_hba.conf文件，检查并设置replica用户白名单，允许从节点密码认证连接和允许用户从replication数据库进行数据同步。
 
-    ```conf
-    host    all             all             all                     scram-sha-256  #允许VPC网段中md5密码认证连接
+    ```text
+    host    all             all             all                     scram-sha-256  #允许用户密码认证连接
     host    replication     all             all                     scram-sha-256  #允许用户从replication数据库进行同步
     ```
 
 4. 修改创建的postgresql文件夹下data文件中postgresql.conf文件，分别找到以下参数，并将参数修改为以下内容。
 
-    ```conf
+    ```text
     listen_addresses = '*'   #监听的IP地址
     wal_level = replica      #启用热备模式
     max_wal_senders = 10     #同步最大的进程数量
@@ -99,7 +99,7 @@ tags:
 
 3. 修改创建的postgresql文件夹下data文件夹下data_new文件夹中postgresql.conf文件，分别找到以下参数，并将参数修改为以下内容。
 
-    ```conf
+    ```text
     recovery_target_timeline = 'latest' #流复制同步到最新的数据
     max_connections = 1000             # 最大连接数，从节点需设置比主节点大
     hot_standby = on                   # 开启热备
@@ -110,7 +110,7 @@ tags:
 
 4. 修改创建的postgresql文件夹下data文件夹下data_new文件夹中postgresql.auto.conf文件，在 primary_conninfo 参数配置添加`application_name=slave1`。
 
-    ```conf
+    ```text
     primary_conninfo = '******** application_name=slave1'
     ```
 
