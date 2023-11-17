@@ -9,17 +9,20 @@ catalog: true
 tags:
     - Django
 ---
-# 场景
-* 实际的业务场景中，往往Model多达几十个
-* 一个个写Admin，再Register，效率低
+## 场景
 
-# 思考
+实际的开发过程中，往往Model多达几十个,一个个写Admin，再Register，效率低。
+
+## 思考
+
 能自动注册Model到管理后台
 
-# 方案
-1. 在项目配置目录下新建一个文件夹apps，再在文件夹下穿件项目同名APP
+## 方案
+
+1. 在项目配置目录下新建一个文件夹apps，再在文件夹下穿件项目同名APP。
 2. 重写APP下apps.py文件中AppConfig类的ready方法
-    ```
+
+    ```python
     from django.apps import apps
     
     
@@ -40,4 +43,5 @@ tags:
                 except admin.sites.AlreadyRegistered:
                     pass
     ```
+
 3. 将APP注册到Django最后。

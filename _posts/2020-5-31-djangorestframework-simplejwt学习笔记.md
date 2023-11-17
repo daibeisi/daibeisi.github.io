@@ -6,18 +6,23 @@ date:       2022-5-31
 author:     呆贝斯
 header-img: img/post-bg-desk.jpg
 ---
-# 简介
+## 简介
+
 Django REST框架的JSON Web Token认证插件。
 
-# 安装
-```
+## 安装
+
+```bash
 pip install djangorestframework-simplejwt
 ```
+
 如打算使用数字签名算法对令牌进行编码或解码，需要额外安装`djangorestframework-simplejwt[crypto]`。
 
-# 项目配置
+## 项目配置
+
 1. Django项目需要配置使用该库，添加 rest_framework_simplejwt.authentication.JWTAuthentication到身份验证类列表。
-    ```
+
+    ```python
     REST_FRAMEWORK = {
         ...
         'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -27,8 +32,10 @@ pip install djangorestframework-simplejwt
         ...
     }
     ```
+
 2. 添加获取token和刷新token接口到项目urls.py。
-    ```
+
+    ```python
     from rest_framework_simplejwt.views import (
         TokenObtainPairView,
         TokenRefreshView,
@@ -41,8 +48,10 @@ pip install djangorestframework-simplejwt
         ...
     ]
     ```
+
 3. 配置SIMPLE_JWT，添加到settings.py。
-   ```
+
+   ```python
    SIMPLE_JWT = {
        "ACCESS_TOKEN_LIFETIME": timedelta(hours=2),  # 访问令牌有效时间
        "REFRESH_TOKEN_LIFETIME": timedelta(days=7),  # 刷新令牌有效时间
@@ -90,7 +99,8 @@ pip install djangorestframework-simplejwt
    ```
 
 4. 如果允许用户在无需访问签名密钥情况下验证HMAC签名的令牌，需要添加认证接口。
-   ```
+
+   ```python
    from rest_framework_simplejwt.views import TokenVerifyView
    
    urlpatterns = [
@@ -101,7 +111,8 @@ pip install djangorestframework-simplejwt
    ```
 
 5. 如果你希望使用本地化或翻译，需要添加`rest_framework_jwt`到`INSTALLED_APPS`。
-   ```
+
+   ```python
    INSTALLED_APPS = [
        ...
        'rest_framework_simplejwt',
@@ -109,9 +120,11 @@ pip install djangorestframework-simplejwt
    ]
    ```
 
-# 测试
+## 测试
+
 1. 发送测试请求。
-   ```
+
+   ```bash
    curl \
      -X POST \
      -H "Content-Type: application/json" \
@@ -126,14 +139,16 @@ pip install djangorestframework-simplejwt
    ```
 
 2. 使用access访问受保护的视图。
-   ```
+
+   ```bash
    curl \
      -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiY29sZF9zdHVmZiI6IuKYgyIsImV4cCI6MTIzNDU2LCJqdGkiOiJmZDJmOWQ1ZTFhN2M0MmU4OTQ5MzVlMzYyYmNhOGJjYSJ9.NHlztMGER7UADHZJlxNG0WSi22a2KaYSfd1S-AuT7lU" \
      http://localhost:8000/api/some-protected-view/
    ```
 
 3. 当access过期时，使用refresh来获取另一个access。
-   ```
+
+   ```bash
    curl \
      -X POST \
      -H "Content-Type: application/json" \
@@ -144,11 +159,13 @@ pip install djangorestframework-simplejwt
    {"access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiY29sZF9zdHVmZiI6IuKYgyIsImV4cCI6MTIzNTY3LCJqdGkiOiJjNzE4ZTVkNjgzZWQ0NTQyYTU0NWJkM2VmMGI0ZGQ0ZSJ9.ekxRxgb9OKmHkfy-zs1Ro_xs1eMLXiR17dIDBVxeT-w"}
    ```
 
-# 自定义令牌声明
+## 自定义令牌声明
 
-# 手动创建令牌
+## 手动创建令牌
+
 如果需要为用户手动创建令牌，可按如下方式完成。
-```
+
+```python
 from rest_framework_simplejwt.tokens import RefreshToken
 
 def get_tokens_for_user(user):
@@ -159,20 +176,20 @@ def get_tokens_for_user(user):
         'access': str(refresh.access_token),
     }
 ```
+
 上面的函数get_tokens_for_user将返回给定用户的新刷新和访问令牌的序列化表示。
 一般来说，任何 rest_framework_simplejwt.tokens.Token 子类的令牌都可以通过这种方式创建。
 
-# 令牌类型
+## 令牌类型
+
 simplejwt提供了两种不同的令牌类型用于认证。令牌的类型通过令牌载荷中
 
 
-# 滑动令牌
+### 滑动令牌
 
-# 黑名单应用
+## 黑名单应用
 
-# 无状态用户认证
+## 无状态用户认证
+
 JwtStatelessUserAuthentication后端认证方法并不执行数据库查询来获得一个数据库实例，相反，它返回一个
-rest_framework_simplejwt.models.TokenUser实例，作为一个无状态用户对象，只由一个经过验证的令牌支持，而不是数据库中的记录。
-他可以开发单独托管的Django应用程序之间的单点登录功能，这些应用程序都共享相同的令牌密钥。
-
-要使用这个功能，需要在DjangoREST框架中的DEFAULT_AUTHENTICATION_CLASSES配置设置中添加rest_framework_simplejwt.authentication
+rest_framework_simplejwt.models.TokenUser实例，作为一个无状态用户对象，只由一个经过验证的令牌支持，而不是数据库中的记录。他可以开发单独托管的Django应用程序之间的单点登录功能，这些应用程序都共享相同的令牌密钥。要使用这个功能，需要在DjangoREST框架中的DEFAULT_AUTHENTICATION_CLASSES配置设置中添加rest_framework_simplejwt.authentication

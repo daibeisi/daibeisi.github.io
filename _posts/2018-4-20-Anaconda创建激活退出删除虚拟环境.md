@@ -6,7 +6,6 @@ date:       2018-4-20
 author:     呆贝斯
 header-img: img/anaconda.png
 ---
-
 ## 创建虚拟环境
 
 使用命令`conda create -n your_env_name python=X.X`创建Python版本为X.X、名字为your_env_name的虚拟环境。
