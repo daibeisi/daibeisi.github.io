@@ -103,44 +103,27 @@ Docker 守护进程绑定到 Unix 套接字，而不是 TCP 端口。默认情�
    docker run hello-world
    ```
 
-## 配置默认日志记录驱动程序
+## 配置Docker守护进程
 
-Docker 提供日志记录驱动程序，用于收集和查看主机上运行的所有容器的日志数据。
-默认日志记录驱动程序json-file将日志数据写入主机文件系统上的 JSON 格式文件。
-随着时间的推移，这些日志文件的大小会不断扩大，从而可能导致磁盘资源耗尽。
-
-为避免日志数据过度使用磁盘的问题，请考虑以下选项之一：
-
-1. 配置json-file日志驱动，开启日志轮换。
-
-   ```bash
-   sudo mkdir -p /etc/docker
-   sudo tee /etc/docker/daemon.json <<-'EOF'
-   {
-     "log-driver": "json-file",
-     "log-level": "",
-     "log-opts": {
-       "max-file": "5",
-       "max-size": "10m"
-     }
-   }
-   EOF
-   sudo systemctl daemon-reload
-   sudo systemctl restart docker
-   ```
-
-2. 使用一个替代的日志驱动，例如默认执行日志轮换的 "本地 "日志驱动。
-3. 使用一个将日志发送到远程日志聚合器的日志驱动。
-
-## 配置镜像加速器
-
-可以通过修改daemon配置文件/etc/docker/daemon.json来使用加速器
+您可以通过修改daemon配置文件/etc/docker/daemon.json来配置Docker守护进程。
 
 ```bash
 $ sudo mkdir -p /etc/docker
 $ sudo tee /etc/docker/daemon.json <<-'EOF'
 {
-  "registry-mirrors": ["https://*.mirror.aliyuncs.com"]
+  "registry-mirrors": ["https://*.mirror.aliyuncs.com"], # 设置镜像仓库的镜像
+  "log-driver": "json-file", # 设置日志驱动程序为 json-file
+  "log-level": "info",
+  "log-opts": {
+    "max-file": "5", # 日志文件最大的数量
+    "max-size": "10m" # 日志文件最大的大小
+  },
+  "default-ulimit": [ # 设置容器的默认 ulimit 限制
+    "nproc=1024",
+    "nofile=65536"
+  ],
+  "defaultConflictCheckShmSize = true", # 在容器启动时执行共享内存的冲突检查
+  "shm_size = 1GB" # 设置/dev/shm（用于共享内存的文件系统）文件系统的大小为1GB
 }
 EOF
 $ sudo systemctl daemon-reload
