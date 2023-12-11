@@ -35,13 +35,9 @@
 	* [标题底图](#header-image)
 	* [搜索展示标题-头文件](#seo-title)
 
-
-
 ### 环境
 
 如果你安装了 [jekyll](http://jekyllcn.com/)，那你只需要在命令行输入`jekyll serve` 或 `jekyll s`就能在本地浏览器中输入`http://127.0.0.1:4000/`预览主题，对主题的修改也能实时展示（需要强刷浏览器）。
-
-
 
 ### 开始
 
@@ -50,8 +46,8 @@
 ```
 # Site settings
 title: BY Blog                    # 你的博客网站标题
-SEOTitle: 柏荧的博客 | BY Blog		# SEO 标题
-description: "Hey"	   	   # 随便说点，描述一下
+SEOTitle: 柏荧的博客 | BY Blog     # SEO 标题
+description: "Hey"                # 随便说点，描述一下
 
 # SNS settings      
 github_username: qiubaiying     # 你的github账号
@@ -143,7 +139,7 @@ featured-condition-size: 1     # A tag will be featured if the size of it is mor
 
 设置是在 `_config.yml`文件里面的`Friends`那块，自己加吧。
 
-```
+```yml
 # Friends
 friends: [
     {
@@ -157,7 +153,6 @@ friends: [
 ]
 ```
 
-
 ### Keynote Layout
 
 HTML5幻灯片的排版：
@@ -168,7 +163,7 @@ HTML5幻灯片的排版：
 
 其主要原理是添加一个 `iframe`，在里面加入外部链接。你可以直接写到头文件里面去，详情请见下面的yaml头文件的写法。
 
-```
+```txt
 ---
 layout:     keynote
 iframe:     "http://huangxuan.me/js-module-7day/"
@@ -176,7 +171,6 @@ iframe:     "http://huangxuan.me/js-module-7day/"
 ```
 
 iframe在不同的设备中，将会自动的调整大小。保留内边距是为了让手机用户可以向下滑动，以及添加更多的内容。
-
 
 ### Comment
 
@@ -196,7 +190,7 @@ iframe在不同的设备中，将会自动的调整大小。保留内边距是�
 
 **其次**，你只需要在下面的 yaml 头文件中设置一下就可以了。
 
-```
+```txt
 # 评论系统
 # Disqus（https://disqus.com/）
 disqus_username: qiubaiying
@@ -212,18 +206,17 @@ disqus_username: qiubaiying
 
 参考我的这篇文章：[《为博客添加 Gitalk 评论插件》](http://qiubaiying.top/2017/12/19/%E4%B8%BA%E5%8D%9A%E5%AE%A2%E6%B7%BB%E5%8A%A0-Gitalk-%E8%AF%84%E8%AE%BA%E6%8F%92%E4%BB%B6/)
 
-
 ### Analytics
 
 网站分析，现在支持百度统计和Google Analytics。需要去官方网站注册一下，然后将返回的code贴在下面：
 
-```
+```txt
 # Baidu Analytics
 ba_track_id: 4cc1f2d8f3067386cc5cdb626a202900
 
 # Google Analytics
-ga_track_id: 'UA-49627206-1'            # 你用Google账号去注册一个就会给你一个这样的id
-ga_domain: huangxuan.me			# 默认的是 auto, 这里我是自定义了的域名，你如果没有自己的域名，需要改成auto。
+ga_track_id: 'UA-49627206-1'  # 你用Google账号去注册一个就会给你一个这样的id
+ga_domain: huangxuan.me   # 默认的是 auto, 这里我是自定义了的域名，你如果没有自己的域名，需要改成auto。
 ```
 
 ### Customization
@@ -266,13 +259,11 @@ ga_domain: huangxuan.me			# 默认的是 auto, 这里我是自定义了的域名
 
 参考文档：[using jekyll with pages](https://help.github.com/articles/using-jekyll-with-pages/) & [Upgrading from 2.x to 3.x](http://jekyllrb.com/docs/upgrading/2-to-3/)
 
-
 ## 致谢
 
-1. 这个模板是从这里 [Hux](https://github.com/Huxpro/huxpro.github.io) fork 的, 感谢这个作者。 
+1. 这个模板是从这里 [Hux](https://github.com/Huxpro/huxpro.github.io) fork 的, 感谢这个作者。
 2. 感谢 Jekyll、Github Pages 和 Bootstrap!
 
 ## License
 
 遵循 MIT 许可证。有关详细,请参阅 [LICENSE](https://github.com/qiubaiying/qiubaiying.github.io/blob/master/LICENSE)。
-

@@ -184,7 +184,6 @@ def get_tokens_for_user(user):
 
 simplejwt提供了两种不同的令牌类型用于认证。令牌的类型通过令牌载荷中
 
-
 ### 滑动令牌
 
 ## 黑名单应用
