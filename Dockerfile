@@ -1,6 +1,6 @@
 FROM ubuntu:latest
 
-RUN apt-get install ruby-full build-essential zlib1g-dev
+RUN apt-get -y install ruby-full build-essential zlib1g-dev
 RUN echo '# Install Ruby Gems to ~/gems' >> ~/.bashrc
 RUN echo 'export GEM_HOME="$HOME/gems"' >> ~/.bashrc
 RUN echo 'export PATH="$HOME/gems/bin:$PATH"' >> ~/.bashrc
