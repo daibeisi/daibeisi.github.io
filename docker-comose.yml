@@ -1,0 +1,10 @@
+version: "3"
+services:
+  jekyll:
+    container_name: jekyll
+    ports:
+      - "4000:4000"
+    build:
+      context: .
+    environment:
+      TZ: Asia/Shanghai
