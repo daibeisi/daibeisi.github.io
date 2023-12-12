@@ -111,19 +111,19 @@ Docker 守护进程绑定到 Unix 套接字，而不是 TCP 端口。默认情�
 $ sudo mkdir -p /etc/docker
 $ sudo tee /etc/docker/daemon.json <<-'EOF'
 {
-  "registry-mirrors": ["https://*.mirror.aliyuncs.com"], # 设置镜像仓库的镜像
-  "log-driver": "json-file", # 设置日志驱动程序为 json-file
+  "registry-mirrors": ["https://*.mirror.aliyuncs.com"],
+  "log-driver": "json-file",
   "log-level": "info",
   "log-opts": {
-    "max-file": "5", # 日志文件最大的数量
-    "max-size": "10m" # 日志文件最大的大小
+    "max-file": "5",
+    "max-size": "10m"
   },
-  "default-ulimit": [ # 设置容器的默认 ulimit 限制
+  "default-ulimit": [
     "nproc=1024",
     "nofile=65536"
   ],
-  "defaultConflictCheckShmSize = true", # 在容器启动时执行共享内存的冲突检查
-  "shm_size = 1GB" # 设置/dev/shm（用于共享内存的文件系统）文件系统的大小为1GB
+  "defaultConflictCheckShmSize = true",
+  "shm_size = 1GB"
 }
 EOF
 $ sudo systemctl daemon-reload
