@@ -2,49 +2,13 @@
 layout: page
 description: "呆笨死，唯有勤学！"
 ---
-{% for post in site.posts %}
-{% if post.onTop == true %}
-<div class="post-preview">
-    <a href="{{ post.url | prepend: site.baseurl }}">
-    <div class="ontop-title-group">
-        <span class="ontop-pushpin glyphicon glyphicon-pushpin"></span>
-        <h2 class="ontop post-title" style="display: inline;">
-            {{ post.title }}
-        </h2>
-    </div>
-        {% if post.subtitle %}
-        <h3 class="post-subtitle">
-            {{ post.subtitle }}
-        </h3>
-        {% endif %}
-        <div class="post-content-preview">
-            {% if post.lang == 'en' %}
-            {{ post.content | strip_html | truncate:300 }}
-            {% else %}
-            {{ post.content | strip_html | truncate:200 }}
-            {% endif %}
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} on
-        {{ post.date | date: "%B %-d, %Y" }}
-    </p>
-</div>
-<hr>
-{% endif %}
-{% endfor %}
 
-<!-- 标签列表 -->
-{% for tag in site.tags %}
+{% for tag in site.tags reversed %}
 <div class="one-tag-list">
     <span class="fa fa-tag listing-seperator" id="{{ tag[0] }}">
         <span class="tag-text">{{ tag[0] }}</span>
     </span>
     {% for post in tag[1] %}
-      <!-- <li class="listing-item">
-      <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
-      <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
-      </li> -->
      <div class="post-preview">
         <a href="{{ post.url | prepend: site.baseurl }}">
             <h2 class="post-title">
@@ -56,25 +20,8 @@ description: "呆笨死，唯有勤学！"
             </h3>
             {% endif %}
         </a>
-        <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
     </div>
     <hr>
     {% endfor %}
 </div>
 {% endfor %}
-
-<!--&lt;!&ndash; Pager &ndash;&gt;-->
-<!--{% if paginator.total_pages > 1 %}-->
-<!--<ul class="pager">-->
-<!--    {% if paginator.previous_page %}-->
-<!--    <li class="previous">-->
-<!--        <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&larr; Newer Posts</a>-->
-<!--    </li>-->
-<!--    {% endif %}-->
-<!--    {% if paginator.next_page %}-->
-<!--    <li class="next">-->
-<!--        <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">Older Posts &rarr;</a>-->
-<!--    </li>-->
-<!--    {% endif %}-->
-<!--</ul>-->
-<!--{% endif %}-->
