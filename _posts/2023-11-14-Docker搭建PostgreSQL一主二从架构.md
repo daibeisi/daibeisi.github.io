@@ -24,17 +24,17 @@ tags:
         services:
           postgres:
             image: postgres:16.1
-              container_name: postgresql
-              restart: always
-              environment:
-                - POSTGRES_DB=postgres
-                - POSTGRES_USER=postgres
-                - POSTGRES_PASSWORD=<数据库密码>
-                - TZ=Asia/Shanghai
-              volumes:
-                - ./data/:/var/lib/postgresql/data
-              ports:
-                - "5432:5432"
+            container_name: postgresql
+            restart: always
+            environment:
+              - POSTGRES_DB=postgres
+              - POSTGRES_USER=postgres
+              - POSTGRES_PASSWORD=<数据库密码>
+              - TZ=Asia/Shanghai
+            volumes:
+              - ./data/:/var/lib/postgresql/data
+            ports:
+              - "5432:5432"
         ```
 
     4. 输入`docker-compose up -d`命令，启动PostgreSQL。
