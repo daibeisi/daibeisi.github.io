@@ -25,10 +25,12 @@ import gradio as gr
 
 
 def get_dashscope_key():
+    
     # 读取本地/项目的环境变量。
     # find_dotenv()寻找并定位.env文件的路径
     # load_dotenv()读取该.env文件，并将其中的环境变量加载到当前的运行环境中
     # 如果你设置的是全局的环境变量，这行代码则没有任何作用。
+    
     _ = load_dotenv(find_dotenv())
     return os.environ['DASHSCOPE_API_KEY']
 
@@ -39,9 +41,11 @@ def call_with_prompt(prompt: str):
         prompt=prompt,
         api_key=get_dashscope_key()
     )
+    
     # The response status_code is HTTPStatus.OK indicate success,
     # otherwise indicate request is failed, you can get error code
     # and message from code and message.
+    
     if response.status_code == HTTPStatus.OK:
         print(response.output)  # The output text
         print(response.usage)  # The usage information
