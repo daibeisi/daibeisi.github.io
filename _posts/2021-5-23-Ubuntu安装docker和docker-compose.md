@@ -4,6 +4,8 @@ title:      Ubuntu安装docker和docker-compose
 date:       2021-5-23
 author:     呆贝斯
 header-img: img/post-bg-rwd.jpg
+tags:
+    - Docker
 ---
 ## 安装
 

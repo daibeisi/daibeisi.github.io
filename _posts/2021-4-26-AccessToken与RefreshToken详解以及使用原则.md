@@ -7,8 +7,7 @@ author:     呆贝斯
 header-img: img/post-bg-hacker.jpg
 catalog: true
 tags:
-    - Oauth2
-    - Access Token & Refresh Token
+  - 协议
 ---
 ## Oauth2 使用Token的基本流程
 

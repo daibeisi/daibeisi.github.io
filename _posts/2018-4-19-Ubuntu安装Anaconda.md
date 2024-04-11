@@ -4,6 +4,8 @@ title:      Ubuntu安装与卸载Anaconda
 date:       2018-4-19
 author:   呆贝斯
 header-img: img/anaconda.png
+tags:
+    - Python
 ---
 ## 安装
 

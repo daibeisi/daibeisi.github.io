@@ -5,6 +5,8 @@ subtitle:   在Anaconda中conda可以理解为一个工具，也是一个可执�
 date:       2018-4-20
 author:     呆贝斯
 header-img: img/anaconda.png
+tags:
+    - Python
 ---
 ## 创建虚拟环境
 

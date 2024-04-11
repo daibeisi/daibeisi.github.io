@@ -6,6 +6,8 @@ date:       2023-2-23
 author:     呆贝斯
 header-img: img/post-bg-desk.jpg
 catalog: true
+tags:
+    - 其他
 ---
 ## 准备工作
 

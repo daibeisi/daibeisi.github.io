@@ -5,6 +5,8 @@ subtitle:   ...
 date:       2022-5-31
 author:     呆贝斯
 header-img: img/post-bg-desk.jpg
+tags:
+    - Python
 ---
 ## 简介
 

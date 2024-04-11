@@ -8,7 +8,6 @@ header-img: img/post-bg-desk.jpg
 catalog: true
 tags:
     - Docker
-    - Django
 ---
 ## 准备工作
 
