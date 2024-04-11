@@ -18,7 +18,6 @@ LangChain 的核心理念是将语言模型用作协作工具，通过它，开�
 作为AI工程框架，LangChain实际是对LLM能力的扩展和补充。如果把LLM比作人的大脑，LangChain则是人的躯干和四肢，协助LLM完成“思考”之外的“脏活累活”。
 它的能力边界只取决于LLM的智力水平和LangChain能提供的工具集的丰富程度。 LangChain提供了LCEL（LangChain Expression Language）声明式编程语言，降低AI工程师的研发成本。
 LangChain提供了Models、Prompts、Indexes、Memory、Chains、Agents六大核心抽象，用于构建复杂的AI应用，同时保持了良好的扩展能力。
-很明显，LLM作为LangChain能力的基础，是了解LangChain工程化设计的前提。接下来我们就从最基础的LLM API使用谈起，一步步了解LangChain的工程化构建过程及其背后的设计理念。
 
 # 环境准备
 
@@ -46,25 +45,21 @@ OpenAI SK：自备。
 import os
 import requests
 
-# API Key
-api_key = os.getenv('OPENAI_API_KEY')
+api_key = os.getenv('OPENAI_API_KEY')  # API Key
 
-# 头部信息
 headers = {
     'Content-Type': 'application/json',
     'Authorization': f'Bearer {api_key}'
-}
+}  # 头部信息
 
-# 准备数据
 data = {
     'model': 'gpt-4',
     'messages': [{'role': 'user', 'content': '什么是图计算？'}],
     'temperature': 0.7
-}
+}  # 准备数据
 
-# 调用API
 url = 'https://api.openai.com/v1/chat/completions'
-response = requests.post(url, json=data, headers=headers)
+response = requests.post(url, json=data, headers=headers)  # 调用API
 answer = response.json()['choices'][0]['message']['content']
 print(answer)
 ````
@@ -74,16 +69,14 @@ print(answer)
 早先的Completion API[3]已经在2023年7月后不再维护，和最新的Chat Completion API参数和结果格式有所不同，最明显的是Prompt是以纯文本方式传递，而非Message格式。
 
 ```python
-# 准备数据
 data = {
     'model': 'gpt-3.5-turbo-instruct',
     'prompt': ['什么是图计算？'],
     'max_tokens': 1024
-}
+}  # 准备数据
 
-# 调用API
 url = 'https://api.openai.com/v1/completions'
-response = requests.post(url, json=data, headers=headers)
+response = requests.post(url, json=data, headers=headers)  # 调用API
 answer = response.json()['choices'][0]['text']
 print(answer)
 ```
@@ -97,14 +90,17 @@ OpenAI的Chat Completion API参数支持传入消息历史，可以轻松地实�
 
 ```python
 # 对话历史
+
 messages = []
 
 def chat_with_ai(message):
     # 记录历史
+    
     messages.append({'role': 'user', 'content': message})
     print(f'me: {message}')
 
     # 对话请求
+    
     data = {
         'model': 'gpt-4',
         'messages': messages,
@@ -114,6 +110,7 @@ def chat_with_ai(message):
     response = requests.post(url, json=data, headers=headers)
 
     # 解析回答
+    
     if response.status_code == 200:
         answer = response.json()['choices'][0]['message']['content']
         messages.append({'role': 'assistant', 'content': answer})
@@ -122,6 +119,7 @@ def chat_with_ai(message):
         print(f'Error: {response.status_code}', response.json())
 
 # 多轮对话
+
 chat_with_ai('什么是图计算？')
 chat_with_ai('刚才我问了什么问题？')
 ```
