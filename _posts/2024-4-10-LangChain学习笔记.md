@@ -9,7 +9,7 @@ tags:
     - 大模型
 ---
 
-# 什么是LangChain？
+## 什么是LangChain？
 
 LangChain 是一个开源的语言模型工具链框架，旨在使研究人员和开发人员能够更轻松地构建、实验和部署以自然语言处理（NLP）为中心的应用程序。
 它提供了多种组件和工具，可帮助用户利用最近的语言模型进展，如大型 Transformer 模型等，并且可以与 Hugging Face 等平台集成。
@@ -19,7 +19,7 @@ LangChain 的核心理念是将语言模型用作协作工具，通过它，开�
 它的能力边界只取决于LLM的智力水平和LangChain能提供的工具集的丰富程度。 LangChain提供了LCEL（LangChain Expression Language）声明式编程语言，降低AI工程师的研发成本。
 LangChain提供了Models、Prompts、Indexes、Memory、Chains、Agents六大核心抽象，用于构建复杂的AI应用，同时保持了良好的扩展能力。
 
-# 环境准备
+## 环境准备
 
 Python环境：建议3.8版本以上。
 
@@ -35,9 +35,9 @@ OpenAI SK：自备。
 
 执行命令：pip install langchain langchain-openai
 
-# API调用
+## API调用
 
-## Chat Completion API
+### Chat Completion API
 
 文本生成模型服务是OpenAI提供的最核心的API服务，自ChatGPT发布后经历过几次版本迭代。当下最新的是Chat Completion API[2]，是AI与LLM交互的核心入口。
 
@@ -64,7 +64,7 @@ answer = response.json()['choices'][0]['message']['content']
 print(answer)
 ````
 
-## Completion API
+### Completion API
 
 早先的Completion API[3]已经在2023年7月后不再维护，和最新的Chat Completion API参数和结果格式有所不同，最明显的是Prompt是以纯文本方式传递，而非Message格式。
 
@@ -83,7 +83,7 @@ print(answer)
 
 除了文本生成服务，OpenAI也提供了大量的LLM的周边服务，以协助AI工程构建更复杂的应用能力。如：函数调用、嵌入、微调、多模态等，具体可参考OpenAI开发文档的内容。
 
-## 智能对话
+### 智能对话
 
 自2022年11月底ChatGPT发布以来，AI的大门才真正地向人类打开，其中给用户留下最深印象的功能，自然是智能对话。
 OpenAI的Chat Completion API参数支持传入消息历史，可以轻松地实现简单的对话服务。
@@ -125,7 +125,7 @@ chat_with_ai('刚才我问了什么问题？')
 ```
 
 
-# SDK使用
+## SDK使用
 
 到目前为止，我们还只是用OpenAI最原始的RESTful API构建LLM工程能力，甚至连OpenAI提供的SDK都未使用。显然这不是一个高效的方式，
 使用前边安装的LangChain-OpenAI集成包langchain-openai可以大大降低代码的开发成本。
@@ -139,7 +139,7 @@ response = llm.invoke('什么是图计算？')
 print(response)
 ```
 
-# 数据抽象——IO
+## 数据抽象——IO
 
 对于文本生成模型服务来说，实际的输入和输出本质上都是字符串，因此直接裸调用LLM服务带来的问题是要在输入格式化和输出结果解析上做大量的重复的文本处理工作。
 LangChain当然考虑到这一点，提供了Prompt和OutputParser抽象，用户可以根据自己的需要选择具体的实现类型使用。
@@ -168,11 +168,11 @@ print(answer)
 ```
 
 
-# 组装成链——Chain
+## 组装成链——Chain
 
 模型的IO组件确实可以减少重复的文本处理工作，但形式上依然不够清晰，这里就引入了LangChain中的关键概念：链（Chain）。
 
-## HelloWorld
+### HelloWorld
 LangChain的表达式语言（LCEL）通过重载__or__运算符的思路，构建了类似Unix管道运算符的设计，实现更简洁的LLM调用形式。
 
 ```python
@@ -186,7 +186,7 @@ print(answer)
 
 至此，我们终于看到了LangChain版的“HelloWorld”……
 
-## RunnablePassthrough
+### RunnablePassthrough
 
 ```python
 from langchain_core.runnables import RunnablePassthrough
@@ -199,7 +199,7 @@ answer = chain.invoke('什么是图计算？')
 print(answer)
 ```
 
-## DAG
+### DAG
 另外，Chain也可以分叉、合并，组合出更复杂的DAG计算图结构。
 
 ```python
@@ -258,7 +258,7 @@ export LANGCHAIN_TRACING_V2="true"
 export LANGCHAIN_API_KEY="<Your-LangChain-AK>"
 ```
 
-## LangGraph
+### LangGraph
 
 基于LCEL确实能描述比较复杂的LangChain计算图结构，但依然有DAG天然的设计限制，即不能支持“循环”。 于是LangChain社区推出了一个新的项目——LangGraph，
 期望基于LangChain构建支持循环和跨多链的计算图结构，以描述更复杂的，甚至具备自动化属性的AI工程应用逻辑，比如智能体应用。其具体使用方式可以参考LangGraph文档。
@@ -266,13 +266,13 @@ export LANGCHAIN_API_KEY="<Your-LangChain-AK>"
 LangGraph声称其设计理念受Pregel/Beam的启发，构建支持多步迭代的计算能力，这部分设计理念和我们设计的支持“流/批/图”计算一体化的图计算引擎TuGraph也十分相似，
 感兴趣的朋友可以访问TuGraph Analytics项目进行学习。
 
-# 开启记忆——Memory
+## 开启记忆——Memory
 
 通过Chain，LangChain相当于以“工作流”的形式，将LLM与IO组件进行了有秩序的连接，从而具备构建复杂AI工程流程的能力。
 而我们都知道LLM提供的文本生成服务本身不提供记忆功能，需要用户自己管理对话历史。因此引入Memory组件，可以很好地扩展AI工程的能力边界。
 ![带记忆的问答处理](/img/img_16.png)
 
-## Memory接口
+### Memory接口
 
 LangChain的BaseMemory接口提供了Memory的统一抽象（截至v0.1.12还是Beta版本），提供了多种类型的Memory组件的实现，
 我们选用最简单的ConversationBufferMemory实现类型。需要注意的是，要将Memory组件应用到Chain上，需要使用子类LLMChain进行创建Chain。
@@ -308,7 +308,7 @@ print(llm_chain.predict(question='刚才我问了什么问题？'))
 直接调用invoke会返回一个LLMResult类型的结果。因此，LLMChain也不能使用管道运算符接StrOutputParser。
 这些设计上的问题，个人推测也是目前Memory模块还是Beta版本的原因之一吧。
 
-## History接口
+### History接口
 
 但是，LangChain提供了工具类RunnableWithMessageHistory，支持了为Chain追加History的能力，从某种程度上缓解了上述问题。
 不过需要指定Lambda函数get_session_history以区分不同的会话，并需要在调用时通过config参数指定具体的会话ID。
@@ -355,7 +355,7 @@ print(chain_with_history.invoke({'question': '刚才我问了什么问题？'},
                                 config={"configurable": {"session_id": None}}))
 ```
 
-# 消除幻觉——RAG
+## 消除幻觉——RAG
 
 拥有记忆后，确实扩展了AI工程的应用场景。但是在专有领域，LLM无法学习到所有的专业知识细节，因此在面向专业领域知识的提问时，
 无法给出可靠准确的回答，甚至会“胡言乱语”，这种现象称之为LLM的“幻觉”。
@@ -420,7 +420,7 @@ print(chain.invoke('蚂蚁图数据库开源了吗？'))
   + VectorStore：向量存储，提供向量存储和相似性检索（ANN算法）能力。LangChain支持的向量存储参考VectorStore接口和实现。示例采用了Meta的Faiss向量数据库，本地安装方式：pip install faiss-cpu。需要额外提及的是，对于图数据库，可以将相似性搜索问题转化为图遍历问题，并具备更强的知识可解释性。蚂蚁开源的TuGraph数据库目前正在做类似的技术探索。
   + Retriever：向量存储的查询器。一般和VectorStore配套实现，通过as_retriever方法获取，LangChain提供的Retriever抽象接口是BaseRetriever。
 
-# 使用工具——Tool
+## 使用工具——Tool
 
 “会使用工具”是人类和动物的根本区别。要构建更强大的AI工程应用，只有生成文本这样的“纸上谈兵”能力自然是不够的。工具不仅仅是“肢体”的延伸，
 更是为“大脑”插上了想象力的“翅膀”。借助工具，才能让AI应用的能力真正具备无限的可能，才能从“认识世界”走向“改变世界”。
@@ -470,11 +470,11 @@ print(chain.invoke('杭州今天多少度？'))
 实际上LangChain提供了大量的内置工具和工具库的支持。@tool只是提供了简洁的工具创建的支持，要定制复杂的工具行为需要自行实现BaseTool工具接口。
 同时工具库接口BaseToolkit下也有大量的实现，如向量存储、SQL数据库、GitHub等等。用户可以根据自身需求选用或自行扩展。
 
-# 走向智能——Agent
+## 走向智能——Agent
 
 通用人工智能（AGI）将是AI的终极形态，几乎已成为业界共识。类比之，构建智能体（Agent）则是AI工程应用当下的“终极形态”。
 
-## 什么是Agent？
+### 什么是Agent？
 
 引用LangChain中Agent的定义，可以一窥Agent与Chain的区别。 Agent的核心思想是使用大型语言模型（LLM）来选择要采取的行动序列。
 在Chain中行动序列是硬编码的，而Agent则采用语言模型作为推理引擎来确定以什么样的顺序采取什么样的行动。
@@ -489,7 +489,7 @@ Agent相比Chain最典型的特点是“自治”，它可以通过借助LLM专�
 
 ![Agent的核心能力](/img/img_22.png)
 
-## 构建智能体
+### 构建智能体
 我们使用Agent继续完成前边Tool部分没有完成的例子。这里使用create_openai_tools_agent方法创建一个简单的OpenAI工具Agent，
 AgentExecutor会自动接管工具调用的动作。如果希望给Agent添加记忆能力，依然可以采用前边Memory章节提过的RunnableWithMessageHistory的方案。
 
@@ -539,7 +539,7 @@ from langchain import hub
 obj = hub.pull("hwchase17//openai-tools-agent")
 ```
 
-四、LangChain架构
+## LangChain架构
 
 ![LangChain产品架构](/img/img_23.png)
 

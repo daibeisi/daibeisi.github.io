@@ -9,12 +9,12 @@ tags:
     - 大模型
 ---
 
-# 准备
+## 准备
 
 1. 一台云服务器，安装python及dashscope、dotenv和gradio库
 2. 开通模型服务灵积，申请API_KEY
 
-# 编码
+## 编码
 
 ```python
 import os
@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
 ```
 
-# 部署
+## 部署
 
 可部署到容器或直接运行
 
