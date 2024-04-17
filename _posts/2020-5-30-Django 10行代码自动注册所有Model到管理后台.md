@@ -2,7 +2,7 @@
 layout:     post
 title:      Django 10行代码自动注册所有Model到管理后台
 subtitle:   ......
-date:       2022-5-23
+date:       2020-5-23
 author:     呆贝斯
 header-img: img/post-bg-desk.jpg
 catalog: true

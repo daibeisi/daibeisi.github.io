@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Docker搭建PostgreSQL一主二从架构
-date:       2023-9-11
+date:       2023-11-14
 author:     呆贝斯
 header-img: img/post-bg-rwd.jpg
 catalog: true

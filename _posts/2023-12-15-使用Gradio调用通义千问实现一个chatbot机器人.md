@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      使用Gradio调用通义千问实现一个chatbot机器人
-date:       2024-1-25
+date:       2023-12-15
 author:     呆贝斯
 header-img: img/post-bg-rwd.jpg
 catalog: true

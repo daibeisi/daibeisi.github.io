@@ -2,7 +2,7 @@
 layout:     post
 title:      djangorestframework-simplejwt学习笔记
 subtitle:   ...
-date:       2022-5-31
+date:       2020-5-31
 author:     呆贝斯
 header-img: img/post-bg-desk.jpg
 tags:

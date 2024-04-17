@@ -2,7 +2,7 @@
 layout:     post
 title:      Docker部署Odoo项目
 subtitle:   ...
-date:       2023-2-23
+date:       2022-2-23
 author:     呆贝斯
 header-img: img/post-bg-desk.jpg
 catalog: true
