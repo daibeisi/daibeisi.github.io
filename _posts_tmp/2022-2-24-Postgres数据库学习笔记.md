@@ -9,10 +9,11 @@ catalog: true
 tags:
     - 数据库
 ---
-# PostgreSQL简介
+## PostgreSQL简介
 
-# PostgreSQL的安装与配置
-## 二进制安装包进行安装
+## PostgreSQL的安装与配置
+
+### 二进制安装包进行安装
 默认情况下，所有 Ubuntu 版本都提供 PostgreSQL。但是，Ubuntu“快照”了一个特定版本的 PostgreSQL，
 然后在该 Ubuntu 版本的整个生命周期中都支持该版本。其他版本的 PostgreSQL 可通过 PostgreSQL apt 存储库获得。
 如果您的 Ubuntu 版本中包含的版本不是您想要的版本，您可以使用 PostgreSQL Apt Repository。
@@ -38,10 +39,13 @@ tags:
     * 执行`sudo su - postgresql`切换到postgres用户
     * 执行`psql`命令登录。
 5. 远程连接
-## 源码编译安装
-## Docker安装
-## 配置
 
-# 数据库优化
+### 源码编译安装
 
-# 高可用方案
+### Docker安装
+
+### 配置
+
+## 数据库优化
+
+## 高可用方案
